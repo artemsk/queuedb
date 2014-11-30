@@ -30,7 +30,7 @@ class QdbCommand extends Command {
     {
 		if (empty($this->argument('job_id'))) {
 			$item = Job::where('status', '!=', Job::STATUS_FINISHED)->orderBy('scheduled_at', 'asc')->first();
-			if(count($item)<1) { echo "Queue is empty.\n"; } 
+			if(count($item)<1) { $this->info("Queue is empty."); } 
 		} else {
 			$item = Job::findOrFail($this->argument('job_id'));
 		}
@@ -44,7 +44,7 @@ class QdbCommand extends Command {
 		}
 		
 		if (($this->option('stats'))) {
-			$this->getStats();
+			$this->info($this->getStats());
 		}
 	}
 
@@ -80,27 +80,28 @@ class QdbCommand extends Command {
 	protected function getStats() 
 	{
 		$jobs = Job::select(\Illuminate\Support\Facades\DB::raw('count(*) as jobs_count, status'))->groupBy('status')->get();
-				
+		$o = "";		
 		foreach($jobs as $j) {
 			switch($j->status):
 				case Job::STATUS_OPEN:
-					echo 'Open - ';
+					$o.= 'Open - ';
 					break;
 				case Job::STATUS_WAITING:
-					echo 'Waiting - ';
+					$o.= 'Waiting - ';
 					break;
 				case Job::STATUS_STARTED:
-					echo 'Started - ';
+					$o.= 'Started - ';
 					break;
 				case Job::STATUS_FINISHED:
-					echo 'Done - ';
+					$o.= 'Done - ';
 					break;		
 				case Job::STATUS_FAILED:
-					echo 'Failed - ';
+					$o.= 'Failed - ';
 					break;				
 			endswitch;
-			echo $j->jobs_count. " \n"; 
+			$o.= $j->jobs_count. " \n"; 
 		}			
+		return $o;
 	}
 	
 	

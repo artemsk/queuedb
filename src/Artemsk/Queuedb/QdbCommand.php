@@ -28,7 +28,8 @@ class QdbCommand extends Command {
      */
     public function fire()
     {
-		if (empty($this->argument('job_id'))) {
+		$jobid = $this->argument('job_id');
+		if (empty($jobid)) {
 			$item = Job::where('status', '!=', Job::STATUS_FINISHED)->orderBy('scheduled_at', 'asc')->first();
 			if(count($item)<1) { $this->info("Queue is empty."); } 
 		} else {

@@ -83,6 +83,18 @@ class QdbJob extends SyncJob
 	}
 	
 	/**
+	 * 
+	 *
+	 * @param  int   $delay minutes|hourse|timestamp
+	 * @return void
+	 */
+	public function fail()
+	{
+		$this->job->status = Job::STATUS_FAILED;
+		$this->repeat = true;
+	}
+	
+	/**
      * 
      *
      * @param string $payload

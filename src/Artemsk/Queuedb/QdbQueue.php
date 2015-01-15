@@ -34,7 +34,7 @@ class QdbQueue extends SyncQueue {
 
         $job = new Job();
         $job->status = Job::STATUS_OPEN;
-        $job->scheduled_at = empty($delay) ? 0 : $delay;
+        $job->scheduled_at = empty($delay) ? \Carbon\Carbon::now() : $delay;
         $job->payload = $payload;
         $job->save();
 
